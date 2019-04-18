@@ -10,6 +10,7 @@ _CONTENT_TYPE_JSONLINES = 'application/jsonlines'
 _VALID_CONTENT_TYPES = [_CONTENT_TYPE_JSON, _CONTENT_TYPE_CSV, _CONTENT_TYPE_JSONLINES]
 _UNIT_FOR_PAYLOAD_SIZE = {'B': 1, 'KB': 1024, 'MB': 1048576}
 
+
 def generate_json(shape, payload_size):
     one_record = _generate_json_recursively(shape)
     if payload_size:
@@ -47,7 +48,6 @@ def _get_num_records_for_json_payload(payload_size, one_record_size):
 
 
 def generate_csv(shape, payload_size):
-    # First, calculate overhead from commas.
     try:
         rows, columns = shape
     except ValueError:
@@ -59,9 +59,8 @@ def generate_csv(shape, payload_size):
         # end in newline characters.
         rows = int(math.ceil((float(payload_size) / columns / 2.0)))
 
-    def generate_row(columns):
-        return ','.join(map(lambda x: str(x), _random_input(columns)))
-    return '\n'.join([generate_row(columns) for _ in range(0, rows)])
+    row = ','.join(map(lambda x: str(x), _random_input(columns)))
+    return '\n'.join([row for _ in range(0, rows)])
 
 
 def _random_input(n):
