@@ -102,9 +102,9 @@ function make_tfs_uri(r, with_method) {
 function parse_custom_attributes(r) {
     var attributes = {}
     var kv_pattern = /tfs-[a-z\-]+=[^,]+/g
-    if (r.headersIn) {
-        var header = r.headersIn[custom_attributes_header]
-        var matches = header.match(kv_pattern)
+    var header = r.headersIn[custom_attributes_header]
+    if (header) {
+    var matches = header.match(kv_pattern)
         if (matches) {
             for (var i = 0; i < matches.length; i++) {
                 var kv = matches[i].split('=')

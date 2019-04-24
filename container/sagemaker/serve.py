@@ -32,10 +32,11 @@ class ServiceManager(object):
         self._tfs_default_model_name = os.environ.get('SAGEMAKER_TFS_DEFAULT_MODEL_NAME', None)
         self._tfs_enable_batching = os.environ.get('SAGEMAKER_TFS_ENABLE_BATCHING', None)
         # TODO: don't have defaults? Set good defaults?
-        self._tfs_batching_max_batch_size = os.environ.get('SAGEMAKER_TFS_BATCHING_MAX_BATCH_SIZE', 8)
-        self._tfs_batching_timeout_microseconds = os.environ.get('SAGEMAKER_TFS_BATCHING_TIMEOUT_MICROS', 1000000)
+        # These are for CPU with 4 cores.
+        self._tfs_batching_max_batch_size = os.environ.get('SAGEMAKER_TFS_BATCHING_MAX_BATCH_SIZE', 10000000000)
+        self._tfs_batching_timeout_microseconds = os.environ.get('SAGEMAKER_TFS_BATCHING_TIMEOUT_MICROS', 0)
         self._tfs_batching_max_enqueued_batches = os.environ.get('SAGEMAKER_TFS_BATCHING_MAX_ENQUEUED_BATCHES', 1000000)
-        self._tfs_batching_num_batch_threads = os.environ.get('SAGEMAKER_TFS_BATCHING_NUM_BATCH_THREADS', 16)
+        self._tfs_batching_num_batch_threads = os.environ.get('SAGEMAKER_TFS_BATCHING_NUM_BATCH_THREADS', 4)
 
         if 'SAGEMAKER_SAFE_PORT_RANGE' in os.environ:
             port_range = os.environ['SAGEMAKER_SAFE_PORT_RANGE']
