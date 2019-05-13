@@ -26,7 +26,7 @@ PING_URL = 'http://localhost:8080/ping'
 INVOCATIONS_URL = 'http://localhost:8080/invocations'
 
 
-@pytest.fixture(scope='module', autouse=True, params=['1', '2', '3', '4', '5'])
+@pytest.fixture(scope='module', autouse=True, params=['1'])
 def volume(tmpdir_factory, request):
     try:
         model_dir = os.path.join(tmpdir_factory.mktemp('test'), 'model')
@@ -46,7 +46,7 @@ def volume(tmpdir_factory, request):
         subprocess.check_call(f'docker volume rm {volume_name}'.split())
 
 
-@pytest.fixture(scope='module', autouse=True, params=['1.11', '1.12'])
+@pytest.fixture(scope='module', autouse=True, params=['1.12'])
 def container(request, volume):
     try:
         command = (
@@ -83,48 +83,11 @@ def make_headers(content_type, method):
     }
     return headers
 
-
-def test_predict_json():
-    headers = make_headers('application/json', 'predict')
-    data = '{"instances": [1.0, 2.0, 5.0]}'
-    response = requests.post(INVOCATIONS_URL, data=data, headers=headers).json()
-    assert response == {'predictions': [3.5, 4.0, 5.5]}
-
-
-def test_zero_content():
-    headers = make_headers('application/json', 'predict')
-    data = ''
-    response = requests.post(INVOCATIONS_URL, data=data, headers=headers)
-    assert 500 == response.status_code
-    assert 'document is empty' in response.text
-
-
-def test_large_input():
-    headers = make_headers('text/csv', 'predict')
-    data_file = 'test/resources/inputs/test-large.csv'
-
-    with open(data_file, 'r') as file:
-        large_data = file.read()
-        response = requests.post(INVOCATIONS_URL, data=large_data, headers=headers).json()
-        predictions = response['predictions']
-        assert len(predictions) == 753936
-
-
-def test_csv_input():
-    headers = make_headers('text/csv', 'predict')
-    data = '1.0,2.0,5.0'
-    response = requests.post(INVOCATIONS_URL, data=data, headers=headers).json()
-    assert response == {'predictions': [3.5, 4.0, 5.5]}
-
-
-def test_unsupported_content_type():
-    headers = make_headers('unsupported-type', 'predict')
-    data = 'aW1hZ2UgYnl0ZXM='
-    response = requests.post(INVOCATIONS_URL, data=data, headers=headers)
-    assert 500 == response.status_code
-    assert 'unsupported content type' in response.text
-
-
 def test_ping_service():
     response = requests.get(PING_URL)
     assert 200 == response.status_code
+
+
+def test_sleep():
+    import time
+    time.sleep(600000)
