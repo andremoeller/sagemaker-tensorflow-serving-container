@@ -436,7 +436,7 @@ import sagemaker
 from sagemaker.tensorflow.serving import Model
 
 sagemaker_session = sagemaker.Session()
-role = 'arn:aws:iam::038453126632:role/service-role/AmazonSageMaker-ExecutionRole-20180718T141171'
+role = 'arn:aws:iam::[account_id]:role/[role_name]'
 bucket = 'am-datasets'
 prefix = 'sagemaker/high-throughput-tfs-batch-transform'
 s3_path = 's3://{}/{}'.format(bucket, prefix)
